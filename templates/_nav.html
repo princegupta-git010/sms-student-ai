@@ -1,0 +1,42 @@
+
+<header class="topbar">
+    <a class="brand" href="/dashboard">✦ SMS Student AI</a>
+
+    <button
+        type="button"
+        class="nav-toggle"
+        id="nav-toggle"
+        aria-expanded="false"
+        aria-controls="site-nav"
+        onclick="toggleSiteNav()">
+        ☰ Menu
+    </button>
+
+    <nav class="site-nav" id="site-nav">
+        <a href="/dashboard">Home</a>
+        <a href="/chat">AI Chat</a>
+        <a href="/materials">Study Materials</a>
+        <a href="/timetable">Timetable</a>
+
+        {% if user and user.is_admin %}
+        <a href="/admin">Admin Panel</a>
+        {% endif %}
+
+        
+<form method="post" action="/logout">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    <button type="submit" class="secondary">Logout</button>
+</form>
+
+    </nav>
+</header>
+
+<script>
+function toggleSiteNav() {
+    const nav = document.getElementById("site-nav");
+    const toggle = document.getElementById("nav-toggle");
+
+    const isOpen = nav.classList.toggle("nav-open");
+    toggle.setAttribute("aria-expanded", String(isOpen));
+}
+</script>

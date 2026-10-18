@@ -1,0 +1,73 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Dashboard | SMS Student AI</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    
+<header class="topbar">
+    <a class="brand" href="/dashboard">✦ SMS Student AI</a>
+
+    <nav style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+        <a href="/dashboard">Home</a>
+        <a href="/chat">AI Chat</a>
+        <a href="/materials">Study Materials</a>
+        <a href="/timetable">Timetable</a>
+
+        {% if user.is_admin %}
+        <a href="/admin">Admin Panel</a>
+        {% endif %}
+
+        <form method="post" action="/logout">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+            <button class="secondary" type="submit">Logout</button>
+        </form>
+    </nav>
+</header>
+
+
+    <main class="container">
+        <section class="welcome">
+            <h1>Welcome, {{ user.name }}!</h1>
+            <p class="muted">School of Management Sciences, Lucknow</p>
+            {% if user.is_admin %}
+            <span class="role">Administrator</span>
+            {% else %}
+            <span class="role">Student</span>
+            {% endif %}
+        </section>
+
+        <section class="grid">
+            <a class="feature-card" href="/chat">
+                <span class="feature-icon">🤖</span>
+                <h2>AI Chatbot</h2>
+                <p>Ask academic questions and get study help.</p>
+            </a>
+
+            <a class="feature-card" href="/materials">
+                <span class="feature-icon">📚</span>
+                <h2>Study Materials</h2>
+                <p>Find notes and PDF resources.</p>
+            </a>
+
+            <a class="feature-card" href="/timetable">
+                <span class="feature-icon">🗓️</span>
+                <h2>Timetable</h2>
+                <p>Check your class schedule.</p>
+            </a>
+
+            {% if user.is_admin %}
+            <a class="feature-card" href="/admin">
+                <span class="feature-icon">⚙️</span>
+                <h2>Admin Panel</h2>
+                <p>Manage materials, timetable and students.</p>
+            </a>
+            {% endif %}
+        </section>
+    </main>
+</body>
+</html>

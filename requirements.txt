@@ -1,0 +1,10 @@
+﻿fastapi
+uvicorn[standard]
+sqlalchemy
+jinja2
+pwdlib[argon2]
+itsdangerous
+slowapi
+python-multipart
+python-dotenv
+google-genai

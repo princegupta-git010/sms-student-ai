@@ -1,0 +1,178 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#15213b">
+    <title>Class Timetable | SMS Student AI</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    {% include "_nav.html" %}
+
+    <main class="container timetable-page">
+
+        <section class="timetable-hero">
+            <div>
+                <span class="timetable-eyebrow">YOUR WEEK AT A GLANCE</span>
+                <h1>Class Timetable</h1>
+                <p class="muted">
+                    B.Tech 2nd Year · Section C · CSE (IoT)
+                </p>
+                <div class="timetable-lunch">
+                    <span aria-hidden="true">☕</span>
+                    <span>
+                        <strong>Lunch break</strong>
+                        <span>1:10 PM – 1:50 PM</span>
+                    </span>
+                </div>
+            </div>
+            <div class="timetable-hero-icon" aria-hidden="true">🗓️</div>
+        </section>
+
+        {% if user.is_admin %}
+        <section class="timetable-admin-panel">
+            <div class="timetable-section-heading">
+                <div class="timetable-heading-icon" aria-hidden="true">＋</div>
+                <div>
+                    <h2>Add a class</h2>
+                    <p class="muted">
+                        Add a subject to the weekly schedule.
+                    </p>
+                </div>
+            </div>
+
+            <form method="post" action="/timetable/add"
+                  class="timetable-add-form">
+                  <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+
+                <div class="timetable-field">
+                    <label for="class-subject">Subject</label>
+                    <input id="class-subject" name="subject"
+                           maxlength="150" placeholder="e.g. Computer Networks"
+                           required>
+                </div>
+
+                <div class="timetable-field">
+                    <label for="class-day">Day</label>
+                    <select id="class-day" name="day" required>
+                        <option value="">Choose day</option>
+                        {% for day in days %}
+                        <option value="{{ day }}">{{ day }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="timetable-field">
+                    <label for="class-start">Start time</label>
+                    <input id="class-start" type="time"
+                           name="start_time" required>
+                </div>
+
+                <div class="timetable-field">
+                    <label for="class-end">End time</label>
+                    <input id="class-end" type="time"
+                           name="end_time" required>
+                </div>
+
+                <div class="timetable-field timetable-room-field">
+                    <label for="class-room">Room (optional)</label>
+                    <input id="class-room" name="room" maxlength="100"
+                           placeholder="e.g. Lab 2">
+                </div>
+
+                <div class="timetable-submit">
+                    <button type="submit">＋ Add class</button>
+                </div>
+            </form>
+        </section>
+        {% endif %}
+
+        <section class="timetable-schedule">
+            <div class="timetable-section-heading schedule-heading">
+                <div>
+                    <h2>Weekly schedule</h2>
+                    <p class="muted">Browse your classes by day.</p>
+                </div>
+                <span class="timetable-week-badge">MON – SAT</span>
+            </div>
+
+            <div class="timetable-days">
+                {% for day in days %}
+                <section class="timetable-day-card">
+
+                    {% set entries = timetable
+                        | selectattr("day", "equalto", day) | list %}
+
+                    <div class="timetable-day-heading">
+                        <div class="timetable-day-marker" aria-hidden="true">
+                            {{ loop.index }}
+                        </div>
+                        <div>
+                            <h3>{{ day }}</h3>
+                            <p class="muted">
+                                {% if entries %}
+                                    {{ entries | length }}
+                                    {% if entries | length == 1 %}class{% else %}classes{% endif %}
+                                {% else %}
+                                    No classes scheduled
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+
+                    {% if entries %}
+                    <div class="timetable-class-list">
+                        {% for entry in entries %}
+                        <article class="timetable-class">
+                            <div class="timetable-class-time">
+                                <span aria-hidden="true">◷</span>
+                                <span>
+                                    <strong>{{ entry.start_time }}</strong>
+                                    <span>{{ entry.end_time }}</span>
+                                </span>
+                            </div>
+
+                            <div class="timetable-class-details">
+                                <h4>{{ entry.subject }}</h4>
+                                {% if entry.room %}
+                                <p class="muted">
+                                    <span aria-hidden="true">⌖</span>
+                                    Room: {{ entry.room }}
+                                </p>
+                                {% endif %}
+                            </div>
+
+                            {% if user.is_admin %}
+                            <form method="post"
+                                  action="/timetable/{{ entry.id }}/delete"
+                                  onsubmit="return confirm('Delete this class?')">
+                                  <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                                <button class="danger timetable-delete"
+                                        type="submit"
+                                        aria-label="Delete {{ entry.subject }}">
+                                    Delete
+                                </button>
+                            </form>
+
+                            {% endif %}
+                        </article>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="timetable-empty-day">
+                        <span aria-hidden="true">🌤️</span>
+                        <p>No classes scheduled for this day.</p>
+                    </div>
+                    {% endif %}
+
+                </section>
+                {% endfor %}
+            </div>
+        </section>
+
+    </main>
+</body>
+</html>
+```

@@ -1,0 +1,97 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#15213b">
+    <title>AI Chatbot | SMS Student AI</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+    {% include "_nav.html" %}
+
+    <main class="container chat-page">
+        <section class="chat-heading">
+            <div>
+                <span class="chat-eyebrow">YOUR PERSONAL STUDY PARTNER</span>
+                <h1>AI Study Assistant <span aria-hidden="true">✦</span></h1>
+                <p class="muted">
+                    Ask questions, understand difficult concepts, and practise
+                    for your exams.
+                </p>
+            </div>
+            <div class="chat-heading-icon" aria-hidden="true">🤖</div>
+        </section>
+
+        <section class="chat-panel">
+            <header class="chat-toolbar">
+                <div class="chat-profile">
+                    <div class="chat-avatar" aria-hidden="true">AI</div>
+                    <div>
+                        <h2>SMS Learning Assistant</h2>
+                        <p class="chat-subtitle">Academic help, whenever you need it</p>
+                    </div>
+                </div>
+
+                <div class="chat-badge">
+                    <span class="status-dot"></span>
+                    AI Assistant
+                </div>
+            </header>
+
+            <div class="chat-tip">
+                <span aria-hidden="true">💡</span>
+                Try asking about Python, COA, Data Structures, or exam preparation.
+            </div>
+
+            <div
+                id="messages"
+                class="messages"
+                aria-live="polite"
+                aria-label="Chat messages"
+                aria-busy="false"
+            >
+                <div class="message assistant">
+                    Hello! I'm your SMS Student AI assistant. What would you like to learn today?
+                </div>
+            </div>
+
+            <form id="chat-form" class="chat-form">
+                <label class="visually-hidden" for="message-input">
+                    Your academic question
+                </label>
+                <textarea
+                    id="message-input"
+                    name="message"
+                    placeholder="Message your study assistant..."
+                    rows="2"
+                    maxlength="4000"
+                    required
+                ></textarea>
+                <button id="send-button" type="submit">
+                    Send <span aria-hidden="true">➤</span>
+                </button>
+            </form>
+
+            <div class="chat-footer">
+                <p id="chat-status" class="muted" role="status" aria-live="polite">
+                </p>
+                <span>Review important answers before your exams.</span>
+            </div>
+        </section>
+
+        <p class="chat-disclaimer">
+            AI responses may occasionally be inaccurate. Verify important
+            academic information with your class notes or teacher.
+        </p>
+    </main>
+
+    <script src="/static/chat.js"></script>
+    
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.6/dist/purify.min.js"></script>
+
+</body>
+</html>

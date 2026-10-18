@@ -1,0 +1,152 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#15213b">
+    <title>Admin Panel | SMS Student AI</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    {% include "_nav.html" %}
+
+    <main class="container admin-page">
+
+        <section class="admin-hero">
+            <div>
+                <span class="admin-eyebrow">PORTAL MANAGEMENT</span>
+                <h1>Admin Dashboard <span aria-hidden="true">⚙️</span></h1>
+                <p class="muted">
+                    Manage student accounts, study resources, and class schedules.
+                </p>
+                <span class="admin-status">
+                    <span class="admin-status-dot"></span>
+                    Administrator access
+                </span>
+            </div>
+            <div class="admin-hero-icon" aria-hidden="true">🛡️</div>
+        </section>
+
+        <section class="admin-stat-grid" aria-label="Portal statistics">
+
+            <article class="admin-stat-card">
+                <div class="admin-stat-top">
+                    <span class="admin-stat-icon admin-icon-blue"
+                          aria-hidden="true">👥</span>
+                    <span class="admin-stat-label">ACCOUNTS</span>
+                </div>
+                <p class="admin-stat-number">{{ student_count }}</p>
+                <h2>Registered students</h2>
+                <p class="muted">Student accounts in the portal</p>
+            </article>
+
+            <article class="admin-stat-card">
+                <div class="admin-stat-top">
+                    <span class="admin-stat-icon admin-icon-purple"
+                          aria-hidden="true">📚</span>
+                    <span class="admin-stat-label">RESOURCES</span>
+                </div>
+                <p class="admin-stat-number">{{ material_count }}</p>
+                <h2>Study materials</h2>
+                <p class="muted">Available uploaded resources</p>
+                <a class="admin-card-link" href="/materials">
+                    Manage PDFs <span aria-hidden="true">↗</span>
+                </a>
+            </article>
+
+            <article class="admin-stat-card">
+                <div class="admin-stat-top">
+                    <span class="admin-stat-icon admin-icon-orange"
+                          aria-hidden="true">🗓️</span>
+                    <span class="admin-stat-label">SCHEDULE</span>
+                </div>
+                <p class="admin-stat-number">{{ timetable_count }}</p>
+                <h2>Scheduled classes</h2>
+                <p class="muted">Entries in the class timetable</p>
+                <a class="admin-card-link" href="/timetable">
+                    Manage timetable <span aria-hidden="true">↗</span>
+                </a>
+            </article>
+
+        </section>
+
+        <section class="admin-directory">
+            <div class="admin-directory-heading">
+                <div>
+                    <span class="admin-eyebrow">ACCOUNT OVERVIEW</span>
+                    <h2>Registered accounts</h2>
+                    <p class="muted">
+                        Review the accounts registered on your student portal.
+                    </p>
+                </div>
+                <span class="admin-count-badge">
+                    {{ students | length }} listed
+                </span>
+            </div>
+
+            {% if students %}
+            <div class="admin-table-wrap">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Student</th>
+                            <th scope="col">Email address</th>
+                            <th scope="col">Account type</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for student in students %}
+                        <tr>
+                            <td>
+                                <div class="admin-person">
+                                    <span class="admin-person-avatar"
+                                          aria-hidden="true">
+                                        {{ student.name[:1] | upper }}
+                                    </span>
+                                    <span class="admin-person-name">
+                                        {{ student.name }}
+                                    </span>
+                                </div>
+                            </td>
+                            <td class="admin-email">{{ student.email }}</td>
+                            <td>
+                                {% if student.is_admin %}
+                                <span class="admin-role admin-role-admin">
+                                    Administrator
+                                </span>
+                                {% else %}
+                                <span class="admin-role admin-role-student">
+                                    Student
+                                </span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="admin-empty">
+                <span aria-hidden="true">👤</span>
+                <h3>No accounts found</h3>
+                <p class="muted">
+                    Registered accounts will appear here.
+                </p>
+            </div>
+            {% endif %}
+        </section>
+
+        <section class="admin-note">
+            <span aria-hidden="true">🔒</span>
+            <p>
+                <strong>Admin access</strong>
+                <span>Keep your administrator credentials private.
+                Only grant administrative access to trusted people.</span>
+            </p>
+        </section>
+
+    </main>
+</body>
+</html>
+```

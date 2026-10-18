@@ -1,0 +1,193 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#15213b">
+    <title>Study Materials | SMS Student AI</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+    {% include "_nav.html" %}
+
+    <main class="container materials-page">
+
+        <section class="materials-hero">
+            <div>
+                <span class="materials-eyebrow">YOUR LEARNING LIBRARY</span>
+                <h1>Study Materials <span aria-hidden="true">📚</span></h1>
+                <p class="muted">
+                    Find notes, subject resources, and PDFs to help you prepare
+                    for your classes and exams.
+                </p>
+            </div>
+            <div class="materials-hero-icon" aria-hidden="true">📖</div>
+        </section>
+
+        <section class="materials-search-section">
+            <form method="get" action="/materials" class="search-form materials-search">
+                <label class="visually-hidden" for="material-search">
+                    Search study materials
+                </label>
+                <span class="search-icon" aria-hidden="true">⌕</span>
+                <input
+                    id="material-search"
+                    type="search"
+                    name="q"
+                    placeholder="Search by subject or material title..."
+                    value="{{ q }}"
+                >
+                <button type="submit">Search</button>
+            </form>
+            {% if q %}
+            <p class="materials-search-note">
+                Showing results for <strong>{{ q }}</strong>
+                · <a href="/materials">Clear search</a>
+            </p>
+            {% endif %}
+        </section>
+
+        {% if user.is_admin %}
+        <section class="materials-upload-panel">
+            <div class="materials-section-heading">
+                <div class="materials-section-icon" aria-hidden="true">↑</div>
+                <div>
+                    <h2>Upload study material</h2>
+                    <p class="muted">
+                        Share a PDF resource with students.
+                    </p>
+                </div>
+            </div>
+
+            {% if error %}
+            <p class="error" role="alert">{{ error }}</p>
+            {% endif %}
+
+            <form
+                method="post"
+                action="/materials/upload"
+                enctype="multipart/form-data"
+                class="materials-upload-form"
+            >
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                <div class="materials-field">
+                    <label for="material-subject">Subject</label>
+                    <input
+                        id="material-subject"
+                        name="subject"
+                        maxlength="150"
+                        placeholder="e.g. Data Structures"
+                        required
+                    >
+                </div>
+
+                <div class="materials-field">
+                    <label for="material-title">Material title</label>
+                    <input
+                        id="material-title"
+                        name="title"
+                        maxlength="200"
+                        placeholder="e.g. Unit 1 Notes"
+                        required
+                    >
+                </div>
+
+                <div class="materials-field materials-file-field">
+                    <label for="material-file">PDF file</label>
+                    <input
+                        id="material-file"
+                        type="file"
+                        name="file"
+                        accept=".pdf,application/pdf"
+                        required
+                    >
+                    <p class="muted">PDF files only. Maximum size: 10 MB.</p>
+                </div>
+
+                <div class="materials-upload-action">
+                    <button type="submit">Upload PDF ↑</button>
+                </div>
+            </form>
+        </section>
+        {% endif %}
+
+        <section class="materials-results">
+            <div class="materials-section-heading results-heading">
+                <div>
+                    <h2>Available resources</h2>
+                    <p class="muted">
+                        Open a material to view its PDF.
+                    </p>
+                </div>
+                <span class="materials-library-badge">PDF LIBRARY</span>
+            </div>
+
+            <div class="material-list">
+                {% for material in materials %}
+                <article class="feature-card material-card">
+                    <div class="material-card-top">
+                        <div class="pdf-icon" aria-hidden="true">PDF</div>
+                        <span class="material-file-label">DOCUMENT</span>
+                    </div>
+
+                    <div class="material-card-content">
+                        <p class="material-subject-label">
+                            {{ material.subject }}
+                        </p>
+                        <h2>{{ material.title }}</h2>
+                        <p class="muted">
+                            Study resource · PDF document
+                        </p>
+                    </div>
+
+                    <div class="material-card-actions">
+                        <a
+                            class="material-view-link"
+                            href="/materials/{{ material.id }}/view"
+                            target="_blank"
+                            rel="noopener"
+                        >
+                            View PDF <span aria-hidden="true">↗</span>
+                        </a>
+
+                        {% if user.is_admin %}
+                        <form
+                            method="post"
+                            action="/materials/{{ material.id }}/delete"
+                            onsubmit="return confirm('Delete this material?')"
+                        >
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                            <button class="danger material-delete-button"
+                                    type="submit">
+                                Delete
+                            </button>
+                        </form>
+                        {% endif %}
+                    </div>
+                </article>
+                {% else %}
+                <div class="materials-empty">
+                    <div class="materials-empty-icon" aria-hidden="true">📂</div>
+                    <h2>No materials found</h2>
+                    {% if q %}
+                    <p class="muted">
+                        Try another subject or title, or clear your search.
+                    </p>
+                    <a href="/materials">Clear search</a>
+                    {% else %}
+                    <p class="muted">
+                        There are no study materials yet.
+                        An administrator can upload PDFs here.
+                    </p>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+
+    </main>
+</body>
+</html>
+```
